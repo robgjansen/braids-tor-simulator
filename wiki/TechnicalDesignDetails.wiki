@@ -1,5 +1,5 @@
 #labels Design,Documentation
-This page contains technical design details for understanding BRAIDS.
+This page contains references to technical design details needed for understanding BRAIDS.
 
 The most important document is the research paper by Rob Jansen, Nicholas Hopper, and Yongdae Kim, "Recruiting New Tor Relays with BRAIDS," presented at CCS 2010.
 
