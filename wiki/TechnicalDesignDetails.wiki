@@ -1,0 +1,6 @@
+#labels Design,Documentation
+This page contains technical design details for understanding BRAIDS.
+
+The most important document is the research paper by Rob Jansen, Nicholas Hopper, and Yongdae Kim, "Recruiting New Tor Relays with BRAIDS," presented at CCS 2010.
+
+Other important documents can be found in the references in the BRAIDS paper, and other design documents from the [http://www.torproject.org/documentation.html Tor website] will aid in understanding how Tor works.
