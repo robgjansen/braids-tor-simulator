@@ -1,0 +1,69 @@
+<body>
+<p><span style="font-family: courier new,courier,monospace;">
+	Copyright 2010 Rob Jansen<br />
+<br />
+This file is part of braids-tor-simulator.<br />
+<br />
+braids-tor-simulator is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.<br />
+<br />
+braids-tor-simulator is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.<br />
+<br />
+You should have received a copy of the GNU General Public License
+along with braids-tor-simulator.  If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.<br />
+<br />
+****************<br />
+* Introduction *<br />
+****************<br />
+This discrete-event-based simulator simulates Tor and BRAIDS.<br />
+<br />
+**********************<br />
+* Build Instructions *<br />
+**********************<br />
+Build the program jar by running:<br />
+$ ant jar <br />
+<br />
+Build the documentation by running:<br />
+$ ant javadoc<br />
+<br />
+Run the jar with:<br />
+$ java -jar config.file<br />
+where config.file is a copy of the configuration file (config_default.properties can be found in src/main/resource). If no config file is given, the default config will be used. All config options are documented in src/main/resource/Configuration.java, and can be read in hte source file or after generating the documentation.<br />
+	<br />
+	*************************************************<br />
+	* High Level Documentation for BRAIDS Simulator *<br />
+	*************************************************<br />
+	Rob Jansen<br />
+	jansen&lt;at&gt;cs.umn.edu<br />
+	<br />
+	This discrete-event-based simulator simulates Tor and BRAIDS by simulating cells as they travel through the network, measuring performance in terms of round-trip delay and throughput. We simulate applications that generate requests, including a file-sharing application and web browser. This data is transferred through circuits created by the client, forwarded at each hop. The server will process a request after receiving the entire message, and return a reply back through the circuit as specified in the request. Measurements are taken at the client upon receiving a reply from the server.<br />
+	<br />
+	All actions in the simulator are represented as events. The main events manage data generation and network functionality.<br />
+	<br />
+	Applications generate data as follows:<br />
+	Web Browsers:<br />
+	&nbsp;&nbsp; &nbsp;Generate top-level page requests and upon receiving a reply, issue several more embedded object requests. Measurements are done after all embedded objects are replied.<br />
+	File Sharers:<br />
+	&nbsp;&nbsp; &nbsp;Connect to several peers and continuously exchange blocks (requests/replies).<br />
+	&nbsp;&nbsp; &nbsp;<br />
+	Data at each hop goes through multiple layers:<br />
+	<br />
+	*************<br />
+	*Application*<br />
+	*************&nbsp;&nbsp;&nbsp;&nbsp; *************&nbsp;&nbsp;&nbsp;&nbsp; *************&nbsp;&nbsp;&nbsp;&nbsp; *************<br />
+	*&nbsp; Client&nbsp;&nbsp; *&nbsp;&nbsp;&nbsp;&nbsp; *&nbsp;&nbsp; Relay&nbsp;&nbsp; *&nbsp;&nbsp;&nbsp;&nbsp; *&nbsp;&nbsp; Relay&nbsp;&nbsp; *&nbsp;&nbsp;&nbsp;&nbsp; *&nbsp;&nbsp; Relay&nbsp;&nbsp; *<br />
+	*************&nbsp;&nbsp;&nbsp;&nbsp; *************&nbsp;&nbsp;&nbsp;&nbsp; *************&nbsp;&nbsp;&nbsp;&nbsp; *************&nbsp;&nbsp;&nbsp;&nbsp; *************<br />
+	*&nbsp; TorNode&nbsp; *&nbsp;&nbsp;&nbsp;&nbsp; *&nbsp; TorNode&nbsp; *&nbsp;&nbsp;&nbsp;&nbsp; *&nbsp; TorNode&nbsp; *&nbsp;&nbsp;&nbsp;&nbsp; *&nbsp; TorNode&nbsp; *&nbsp;&nbsp;&nbsp;&nbsp; *&nbsp; Server&nbsp;&nbsp; *<br />
+	*************&nbsp;&nbsp;&nbsp;&nbsp; *************&nbsp;&nbsp;&nbsp;&nbsp; *************&nbsp;&nbsp;&nbsp;&nbsp; *************&nbsp;&nbsp;&nbsp;&nbsp; *************<br />
+	*&nbsp; Network&nbsp; *&lt;---&gt;*&nbsp; Network&nbsp; *&lt;---&gt;*&nbsp; Network&nbsp; *&lt;---&gt;*&nbsp; Network&nbsp; *&lt;---&gt;*&nbsp; Network&nbsp; *<br />
+	*************&nbsp;&nbsp;&nbsp;&nbsp; *************&nbsp;&nbsp;&nbsp;&nbsp; *************&nbsp;&nbsp;&nbsp;&nbsp; *************&nbsp;&nbsp;&nbsp;&nbsp; *************<br />
+	<br />
+	The application generates data and pushes it down to the client. The client ensures a circuit exists, splits application requests into cells, and computes priority for each cell. These cells are then transferred to the TorNode, where they wait in buffers to be scheduled by the network. Each network is limited by its upload/download bandwidth, and message send/receive events will be delayed accordingly. When a relay receives data, it processes it by setting the next hop and again sending it to wait in the buffers for network processing. The last relay in the path strips off the cells. The server receives data and, once it can reconstruct an entire request, generates replies as specified by the request. The data transfers back to the client, where measurements are taken and logged.<br />
+	<br />
+	Each node implements a scheduling algorithm in order to make scheduling decisions. All servers implement FirstComeFirstServed, and Tor relays use with RoundRobin, or WaitingTimePriority, as specified in the configuration file.</span></p>
+</body>
