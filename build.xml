@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="simulator">
+    <property environment="env"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <path id="simulator.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="lib/junit4.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="init" name="build">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="simulator.classpath"/>
+        </javac>
+    </target>
+    <target depends="build" name="run">
+        <java classname="main.system.Driver" failonerror="true" fork="yes">
+            <classpath refid="simulator.classpath"/>
+        </java>
+    </target>
+	<target name="javadoc">
+	        <javadoc overview="doc/README.html" access="private" author="true" classpath="lib/junit4.jar" destdir="doc" doctitle="BRAIDS Simulator" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="main.resources,test.util,main.scheduling,main.network,main.util,main.nodes,main.applications,main.events,main.system" source="1.6" sourcepath="src" splitindex="true" use="true" version="true"/>
+	</target>
+	<target depends="build" name="jar">
+	    <jar destfile="BRAIDS-simulator.jar" basedir="bin">
+	        <manifest>
+	            <attribute name="Main-Class" value="main.system.Driver"/>
+	        </manifest>
+	    </jar>
+	</target>
+</project>
