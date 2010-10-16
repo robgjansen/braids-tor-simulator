@@ -21,14 +21,12 @@
 package main.resource;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
 import java.util.Hashtable;
 import java.util.TreeMap;
+import java.util.logging.Level;
 import java.util.zip.GZIPInputStream;
 
 import main.system.Driver;
@@ -110,15 +108,9 @@ public class Distribution {
 
 		// read in all distribution data from files and store in master table
 		for (DistributionType d : DistributionType.values()) {
-			InputStream stream = null;
-			try {
-				stream = new GZIPInputStream(new FileInputStream(new File(Distribution.class.getResource(d.getFilename()).toURI())));
-			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			BufferedReader in = new BufferedReader(
-					new InputStreamReader(stream));
+			InputStream istream = Distribution.class.getResourceAsStream(d.getFilename());
+			InputStream gzistream = new GZIPInputStream(istream);
+			BufferedReader in = new BufferedReader(new InputStreamReader(gzistream));
 
 			TreeMap<Double, Integer> map = new TreeMap<Double, Integer>();
 
